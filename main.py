@@ -3,17 +3,33 @@ import sys
 from email.message import EmailMessage
 from user_login import email, password_key
 
-def read_file(file_path):
-    """Reads the content of a file with UTF-8 encoding."""
+def read_recipients(file_path):
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
-            return file.read().splitlines()  # Returns a list of lines
+            recipients = []
+            for recipient in file.read().splitlines():
+                if recipient not in recipients:
+                    recipients.append(recipient)
+            return recipients   # Returns a list of lines
     except FileNotFoundError:
         print(f"Error: File '{file_path}' not found.")
         sys.exit(1)
     except Exception as e:
         print(f"Error reading file '{file_path}': {e}")
         sys.exit(1)
+
+
+def read_content(file_path):
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            content = ""
+            for line in file:
+                content += line
+            return content
+    except FileNotFoundError:
+        print(f"Error: File '{file_path}' not found.")
+        sys.exit(1)
+
 
 def send_email(recipients, content, subject):
     """Sends an email using SMTP."""
@@ -45,6 +61,7 @@ def send_email(recipients, content, subject):
     except Exception as e:
         print(f"Failed to send email to {recipient}: {e}")
 
+
 def main():
     """Main function to handle command-line arguments."""
     if len(sys.argv) != 3:
@@ -54,12 +71,18 @@ def main():
     database_file = sys.argv[1]
     content_file = sys.argv[2]
 
-    recipients = read_file(database_file)  # Read recipient emails
-    content = "\n".join(read_file(content_file))  # Read content as a string
+    recipients = read_recipients(database_file)  # Read recipient emails
+    content = read_content(content_file)  # Read content as a string
 
-    subject = "Test email spam"
+    subject = "Test mail"
 
-    send_email(recipients, content, subject)
+    print(content)
+
+    if (input(f"Start sending emails to {len(recipients)} recipients. Y/n : ") == "Y"):
+        send_email(recipients, content, subject)
+    else:
+        sys.exit(2)
+
 
 if __name__ == "__main__":
     main()
