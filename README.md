@@ -43,7 +43,7 @@ Example:
 ```sh
 python main.py database.txt content.txt
 ```
-Before sending emails, the script will display the email content and prompt for confirmation.
+Before sending emails, the script will prompt for confirmation.
 
 ## Script Breakdown
 - `read_recipients(file_path)`: Reads recipient emails from a file, ensuring uniqueness.
