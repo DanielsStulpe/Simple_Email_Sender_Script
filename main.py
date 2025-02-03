@@ -76,8 +76,6 @@ def main():
 
     subject = "Test mail"
 
-    print(content)
-
     if (input(f"Start sending emails to {len(recipients)} recipients. Y/n : ") == "Y"):
         send_email(recipients, content, subject)
     else:
